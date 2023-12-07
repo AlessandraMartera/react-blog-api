@@ -11,7 +11,9 @@ export default function TheForm() {
     isPublished: false,
   }
 
-  /* [
+  /* */
+
+  const [articolsList, setArticolsList] = useState([
     {
       "id": 0,
       "name": "Albero di Natale Bianco",
@@ -42,21 +44,20 @@ export default function TheForm() {
       "tags": ["bianco", "verde"],
       "isPublished": true
     }
-  ]*/
+  ]);
 
-  const [articolsList, setArticolsList] = useState([]);
-
+  const [postsList, setPostsList] = useState([]);
   // Fetching dei dati
-  function fetchArticols() {
+  function fetchPosts() {
     fetch("http://localhost:3000/posts")
     .then((res) => res.json())
-    .then(setArticolsList)
+    .then(setPostsList)
     .catch(error => console.error('Errore nella richiesta:', error));
   }
 
-  useEffect(fetchArticols, []);
+  useEffect(fetchPosts, []);
 
-  fetchArticols();
+  fetchPosts();
 
   const [formData, setFormData] = useState(initialFormData);
 
@@ -137,36 +138,27 @@ export default function TheForm() {
     <>
     <ul className="articolsList">
       <h1>
-        articoli pubblicati sullo shop 
-        {/* <button onClick={fetchArticols}>Carica Articoli</button> */}
+        Posts pubblicati sullo shop 
       </h1>
-     { articolsList.map((articol) => { 
+     { postsList.map((post) => { 
       
-      if(articol.isPublished){
+      if(post.published){
         return (
-          <li className='card' key={articol.id}> 
+          <li className='card' key={post.id}> 
 
-            <img src={articol.image} alt={"l'immagine dell'articolo " + articol.title + " non è al momento disponibile"} />
+            <img src={post.image} alt={"l'immagine dell'post " + post.title + " non è al momento disponibile"} />
             
             <div>
-              {articol.category}
+              {post.category}
             </div>
             <div>
-              {articol.name} - {articol.price} € 
+              {post.title} 
             </div>
 
             <p>
-              {articol.content}
+              {post.content}
             </p>
-
-            {/* {articol.tags.map(tag => tag + ", " )} */}
-            
-
-            {/* buttons */}
-            <div>
-              <button onClick={() => {destroyArticol(articol.id)}}><i className="fa-solid fa-trash-can"></i></button> 
-              <button onClick={() => {updateArticol(articol.id)}}><i className="fa-solid fa-marker"></i></button>
-            </div>
+           
           </li>
           
           )
@@ -210,13 +202,13 @@ export default function TheForm() {
           </select>
         </div>
 
-        {/* <div>
+        <div>
           <label>Tags:</label>
           <br />
           <input type="checkbox" id="bianco" value="bianco" onChange={(e) => changeValueForm(e.target.value, "tags")} /> bianco
           <input type="checkbox" id="rosso" value="rosso" onChange={(e) => changeValueForm(e.target.value, "tags")} /> rosso
          
-        </div> */}
+        </div>
 
         <div>
           <label htmlFor="isPublished">Pubblicato:</label>
@@ -233,6 +225,46 @@ export default function TheForm() {
 
       </form>
 
+      <ul className="articolsList">
+      <h1>
+        articoli pubblicati sullo shop 
+      </h1>
+     { articolsList.map((articol) => { 
+      
+      if(articol.isPublished){
+        return (
+          <li className='card' key={articol.id}> 
+
+            <img src={articol.image} alt={"l'immagine dell'articolo " + articol.name + " non è al momento disponibile"} />
+            
+            <div>
+              {articol.category}
+            </div>
+            <div>
+              {articol.name} - {articol.price} € 
+            </div>
+
+            <p>
+              {articol.content}
+            </p>
+
+            {articol.tags.map(tag => tag + ", " )}
+            
+
+            {/* buttons */}
+            <div>
+              <button onClick={() => {destroyArticol(articol.id)}}><i className="fa-solid fa-trash-can"></i></button> 
+              <button onClick={() => {updateArticol(articol.id)}}><i className="fa-solid fa-marker"></i></button>
+            </div>
+          </li>
+          
+          )
+          
+      }else{
+        return
+      }
+          })}
+    </ul>
 
       <ul className="articolsList">
         <h1>
@@ -258,7 +290,7 @@ export default function TheForm() {
               {articol.content}
             </p>
 
-            {/* {articol.tags.map(tag => tag + ", " )} */}
+            {articol.tags.map(tag => tag + ", " )}
             
 
             {/* buttons */}
